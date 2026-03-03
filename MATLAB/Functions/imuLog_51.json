@@ -1,0 +1,56 @@
+{
+  "header": {
+    "version": "1.1",
+    "created": "129849",
+    "logger": "Teensy IMU Logger"
+  },
+  "hardware": {
+    "mcu": "Teensy 4.1",
+    "imu_drdy_pin": 33,
+    "imu_cs_pin": 36,
+    "spi_clock_hz": 1000000
+  },
+  "imu_config": {
+    "accel": {
+      "odr_hz": 102.27,
+      "sample_rate_divider": 10,
+      "full_scale_range": "+/-2g",
+      "dlpf": "acc_d473bw_n499bw"
+    },
+    "gyro": {
+      "odr_hz": 102.27,
+      "sample_rate_divider": 10,
+      "full_scale_range": "+/-250dps",
+      "dlpf": "gyr_d5bw7_n8bw9"
+    },
+    "magnetometer": {
+      "enabled": true,
+      "odr_hz": 100.0,
+      "full_scale_range": "±4900 µT",
+      "lsb_per_ut": 6.6667
+    }
+  },
+  "buffer_config": {
+    "chunk_bytes": 131072,
+    "buffer_count": 2,
+    "record_size_bytes": 28,
+    "preallocate_bytes": 1073741824
+  },
+  "performance": {
+    "isr_count": 5520,
+    "samples_recorded": 5520,
+    "samples_dropped": 0,
+    "drop_rate_percent": 0.00,
+    "max_write_time_us": 0,
+    "buffer_0_filled": 1,
+    "buffer_1_filled": 0,
+    "buffer_swaps": 1
+  },
+  "file_metadata": {
+    "bin_filename": "imuLog_51.bin",
+    "json_filename": "imuLog_51.json",
+    "actual_size_bytes": 154564,
+    "sample_count": 5520,
+    "duration_seconds": 53.97
+  }
+}
