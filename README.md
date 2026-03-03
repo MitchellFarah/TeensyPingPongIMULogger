@@ -81,7 +81,6 @@ The TeensyPingPongIMULogger is a robust data acquisition system designed for hig
 | IMU | SparkFun ICM-20948 (Qwiic or breakout) | 9-axis motion sensing |
 | SD Card | Class 10 or UHS-I, 8GB+ | Data storage |
 | USB Cable | Micro-USB | Power and programming |
-| Jumper Wires | 22 AWG dupont | Connections (if not using Qwiic) |
 
 ### Pin Connections
 
