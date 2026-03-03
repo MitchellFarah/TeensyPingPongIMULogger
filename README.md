@@ -416,143 +416,7 @@ The `MATLAB/` directory contains a suite of functions for importing, analyzing, 
 
 ### Quick Start - MATLAB
 
-```matlab
-% Decode a logging session
-log = decodeImuLog('imuLog_00');
-
-% Access raw integer data
-ax_raw = log.raw.ax;      % int16 array
-mx_raw = log.raw.mx;      % magnetometer X (int16)
-
-% Access physical units
-accel_g = log.phys.accel_g;    % N×3 matrix [ax, ay, az] in g
-gyro_dps = log.phys.gyro_dps;  % N×3 matrix [gx, gy, gz] in °/s
-mag_uT = log.phys.mag_uT;      % N×3 matrix [mx, my, mz] in µT
-temp_C = log.phys.temp_C;      % Temperature in °C
-
-% Access timestamps
-t_s = log.time.t_s;       % Time in seconds (re-zeroed)
-t_us = log.time.t_us;     % Raw microsecond timestamps
-
-% Use timetable (if available)
-log.timetable             % Timetable with all signals
-```
-
-### decodeImuLog
-
-Primary function for loading IMU log files into MATLAB.
-
-```matlab
-% Basic usage
-log = decodeImuLog('imuLog_00');
-
-% With initial trim (discard first N samples)
-log = decodeImuLog('imuLog_00', 100);  % Skip first 100 samples
-
-% Full path also works
-log = decodeImuLog('C:\Data\imuLog_05');
-```
-
-**Output Structure:**
-```matlab
-log =
-  struct with fields:
-        meta: [1×1 struct]          % JSON metadata
-       files: [1×1 struct]          % File paths
-         raw: [1×1 struct]          % Raw integer data
-        phys: [1×1 struct]          % Physical units
-        time: [1×1 struct]          % Time vectors
-   timetable: [N×10 timetable]      % Combined timetable
-```
-
-**Raw Fields:**
-- `seq` - Sequence number (uint32)
-- `ts_us` - Microsecond timestamp (uint32)
-- `ax, ay, az` - Accelerometer raw (int16)
-- `gx, gy, gz` - Gyroscope raw (int16)
-- `temp` - Temperature raw (int16)
-- `mx, my, mz` - Magnetometer raw (int16)
-
-**Physical Fields:**
-- `accel_g` - Acceleration in g (N×3 double)
-- `gyro_dps` - Angular velocity in °/s (N×3 double)
-- `mag_uT` - Magnetic field in µT (N×3 double)
-- `temp_C` - Temperature in °C (N×1 double)
-
-### imuTimingAnalysis
-
-Analyzes timing characteristics of the logged data.
-
-```matlab
-% Analyze timing
-stats = imuTimingAnalysis(log);
-
-% Output:
-%   stats.mean_dt      - Mean sample period
-%   stats.std_dt       - Standard deviation of period
-%   stats.mean_fs      - Mean sampling frequency
-%   stats.jitter_rms   - RMS timing jitter
-%   stats.jitter_peak  - Peak timing jitter
-%   stats.num_drops    - Number of detected dropped samples
-%   stats.drop_locations - Indices where drops occurred
-```
-
-**Example Output:**
-```
-===== IMU Timing Analysis =====
-Mean sample period : 0.009780 s
-Mean sampling rate : 102.250 Hz
-Std period         : 1.234567e-06 s
-RMS jitter         : 8.765432e-07 s
-Peak jitter        : 4.321000e-05 s
-Min dt             : 0.009700 s
-Max dt             : 0.009890 s
-Dropped samples    : 0
-```
-
-### Example Analysis Script
-
-```matlab
-% Load data
-log = decodeImuLog('imuLog_00');
-
-% Timing analysis
-stats = imuTimingAnalysis(log);
-
-% Plot accelerometer data
-figure('Name', 'Accelerometer Data');
-plot(log.time.t_s, log.phys.accel_g);
-xlabel('Time (s)');
-ylabel('Acceleration (g)');
-legend('X', 'Y', 'Z');
-grid on;
-
-% Plot magnetometer data (Earth's field ~25-65 µT)
-figure('Name', 'Magnetometer Data');
-plot(log.time.t_s, log.phys.mag_uT);
-xlabel('Time (s)');
-ylabel('Magnetic Field (µT)');
-legend('X', 'Y', 'Z');
-grid on;
-
-% Calculate orientation from magnetometer
-heading = atan2d(log.phys.mag_uT(:,2), log.phys.mag_uT(:,1));
-figure('Name', 'Heading');
-plot(log.time.t_s, heading);
-xlabel('Time (s)');
-ylabel('Heading (degrees)');
-grid on;
-
-% 3D trajectory (simple integration)
-vel = cumtrapz(log.time.t_s, log.phys.accel_g * 9.81);
-pos = cumtrapz(log.time.t_s, vel);
-figure('Name', '3D Position (integrated)');
-plot3(pos(:,1), pos(:,2), pos(:,3));
-xlabel('X (m)'); ylabel('Y (m)'); zlabel('Z (m)');
-grid on; axis equal;
-```
-
----
+Reference the MATLAB folder for an example processing script and sample data.
 
 ## Configuration
 
@@ -614,10 +478,12 @@ TeensyPingPongIMULogger/
 │   │   ├── decodeImuLog.m        # Primary decoder
 │   │   ├── jsonToStruct.m        # JSON loader
 │   │   ├── imuTimingAnalysis.m   # Timing analysis
-│   │   ├── readSeqTs_chunkAware.m# Low-level reader
-│   │   └── IMU_LOGGER_FORMAT.md  # Format documentation
-│   └── Depreciated/              # Older versions (reference)
-│
+│   |   ├── imuLog51.bin          # Sample binary data
+│   |   ├── imuLog51.json         # Sample json header
+│   |
+|   ├── Processing/
+|       ├── exampleReadings.m     # Sample MATLAB data read script
+│   
 ├── platformio.ini                # PlatformIO configuration
 └── README.md                     # This file
 ```
